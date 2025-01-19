@@ -8,7 +8,8 @@ uses
   UnitDBConnectionIntf in 'Connection\UnitDBConnectionIntf.pas',
   UnitSQLiteConnection in 'Connection\UnitSQLiteConnection.pas',
   UnitTableList in 'Connection\UnitTableList.pas',
-  UnitSQLiteDLLExtract in 'FuncoesUteis\UnitSQLiteDLLExtract.pas';
+  UnitSQLiteDLLExtract in 'FuncoesUteis\UnitSQLiteDLLExtract.pas',
+  UnitSwaggerConfig in 'HorseConfig\UnitSwaggerConfig.pas';
 
 {$R *.res}
 

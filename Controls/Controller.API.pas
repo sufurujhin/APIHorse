@@ -10,6 +10,7 @@ uses Horse, UnitDBConnectionIntf, FireDAC.Comp.Client, UnitDBConnectionFactory,
 type
   TControllerAPI = Class
   private
+    FPort: Integer;
     FConnection: TFDConnection;
     FSQLiteDriverLink: TFDPhysSQLiteDriverLink;
     function GetConnection: IDBConnection;
@@ -18,23 +19,31 @@ type
     procedure AtivarAPI;
     procedure DesativarAPI;
     procedure StartConnection;
+    property Port: Integer read FPort;
   End;
+var
+  APP: THorse;
 
 implementation
 
 uses
-  UnitTableList;
+  UnitTableList,
+  Horse.GBSwagger,
+  UnitSwaggerConfigProfessor;
 
 { TControllerAPI }
 
 procedure TControllerAPI.AtivarAPI;
 begin
+  FPort :=  8080;
   try
     if not THorse.IsRunning then
     begin
+      THorse.Use(HorseSwagger); // Access http://localhost:9000/swagger/doc/html
       THorse.MaxConnections := 9999999;
-      THorse.Port := 8080;
-      THorse.Listen(8080);
+      THorse.Port := Port;
+      ConfigurarSwaggerProfessor;
+      THorse.Listen(Port);
       StartConnection;
     end;
   except

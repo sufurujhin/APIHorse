@@ -16,12 +16,16 @@ type
     PanelPaddingBottom: TPanel;
     PanelButtonAtivar: TPanel;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    PanelNavegador: TPanel;
     procedure PanelButtonAtivarMouseLeave(Sender: TObject);
     procedure PanelButtonAtivarMouseEnter(Sender: TObject);
     procedure PanelButtonAtivarClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure PanelNavegadorClick(Sender: TObject);
+    procedure PanelNavegadorMouseEnter(Sender: TObject);
+    procedure PanelNavegadorMouseLeave(Sender: TObject);
   private
     { Private declarations }
     FStatus: TStatus;
@@ -46,7 +50,8 @@ const
 implementation
 
 uses
-  UnitSQLiteDLLExtract;
+  UnitSQLiteDLLExtract,
+  ShellAPI;
 
 {$R *.dfm}
 {$R Resources/SQLiteDll.res}
@@ -117,6 +122,29 @@ begin
       TPanel(Sender).Color := VERDE_FOSCO;
   end;
   Application.ProcessMessages;
+end;
+
+procedure TFormMain.PanelNavegadorClick(Sender: TObject);
+var
+  URLSwagger: WideString;
+begin
+  if FAPI.Port = 0 then
+  begin
+    AtivarAPI(PanelButtonAtivar);
+    Sleep(100);
+  end;
+  URLSwagger := '--start-fullscreen http://localhost:' + IntToStr(FAPI.Port) + '/swagger/doc/html';
+  ShellExecute(0, 'OPEN', 'chrome.exe', PWideChar(URLSwagger), nil, SW_SHOWNORMAL);
+end;
+
+procedure TFormMain.PanelNavegadorMouseEnter(Sender: TObject);
+begin
+  TPanel(Sender).Color := $00AFAF61;
+end;
+
+procedure TFormMain.PanelNavegadorMouseLeave(Sender: TObject);
+begin
+  TPanel(Sender).Color := $00808040;
 end;
 
 end.

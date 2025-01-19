@@ -62,6 +62,25 @@ object FormMain: TFormMain
         OnMouseEnter = PanelButtonAtivarMouseEnter
         OnMouseLeave = PanelButtonAtivarMouseLeave
       end
+      object PanelNavegador: TPanel
+        Left = 341
+        Top = 0
+        Width = 113
+        Height = 37
+        Margins.Left = 20
+        Margins.Right = 20
+        Margins.Bottom = 20
+        Align = alRight
+        BevelOuter = bvNone
+        Caption = 'Navegar'
+        Color = 8421440
+        ParentBackground = False
+        TabOrder = 1
+        OnClick = PanelNavegadorClick
+        OnMouseEnter = PanelNavegadorMouseEnter
+        OnMouseLeave = PanelNavegadorMouseLeave
+        ExplicitLeft = 8
+      end
     end
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
