@@ -64,4 +64,9 @@ object FormMain: TFormMain
       end
     end
   end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 424
+    Top = 16
+  end
 end

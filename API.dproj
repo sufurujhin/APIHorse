@@ -103,6 +103,11 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Controls\Controller.API.pas"/>
+        <DCCReference Include="Connection\UnitDBConnectionFactory.pas"/>
+        <DCCReference Include="Connection\UnitDBConnectionIntf.pas"/>
+        <DCCReference Include="Connection\UnitSQLiteConnection.pas"/>
+        <DCCReference Include="Connection\UnitTableList.pas"/>
+        <DCCReference Include="FuncoesUteis\UnitSQLiteDLLExtract.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

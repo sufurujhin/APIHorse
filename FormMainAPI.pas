@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Controller.API;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Controller.API,
+  FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Stan.Intf, FireDAC.Comp.UI;
 
 type
   TStatus = (Offiline, Online);
@@ -14,6 +15,7 @@ type
     PanelCentral: TPanel;
     PanelPaddingBottom: TPanel;
     PanelButtonAtivar: TPanel;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     procedure PanelButtonAtivarMouseLeave(Sender: TObject);
     procedure PanelButtonAtivarMouseEnter(Sender: TObject);
     procedure PanelButtonAtivarClick(Sender: TObject);
