@@ -47,8 +47,6 @@ begin
   try
     if THorse.IsRunning then
       THorse.StopListen;
-    if Assigned(FSQLiteDriverLink) then
-      FSQLiteDriverLink.Free;
   except
 
   end;
