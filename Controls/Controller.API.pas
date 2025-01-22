@@ -3,7 +3,7 @@ unit Controller.API;
 interface
 
 uses Horse,
-  UnitInterface.ConnectionDB,
+  UnitInterfaces.Connection,
   UnitDBConnectionFactory,
   System.SysUtils,
   FireDAC.Phys.SQLite,
@@ -30,8 +30,7 @@ implementation
 
 uses
   UnitTableList,
-  Horse.GBSwagger,
-  UnitSwaggerConfigProfessor;
+  Horse.GBSwagger;
 
 { TControllerAPI }
 
@@ -42,12 +41,11 @@ begin
   try
     if not THorse.IsRunning then
     begin
-      THorse.Use(HorseSwagger); // Access http://localhost:9000/swagger/doc/html
+      THorse.Use(HorseSwagger); // Access http://localhost:8080/swagger/doc/html
       THorse.MaxConnections := 9999999;
       THorse.Port := Port;
       StartConnection;
       RegisterProfessorRoutes(App, GetConnection);
-      ConfigurarSwaggerProfessor;
       THorse.Listen(Port);
     end;
   except

@@ -116,6 +116,7 @@
         </DCCReference>
         <DCCReference Include="Routes\UnitProfessorRoutes.pas"/>
         <DCCReference Include="Connection\UnitInterfaces.Connection.pas"/>
+        <DCCReference Include="DAO\UnitProfessorDAO.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

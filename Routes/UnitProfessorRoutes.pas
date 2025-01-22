@@ -9,7 +9,8 @@ uses
   UnitSQLiteConnection,
   System.SysUtils,
   System.JSON,
-  UnitInterfaces.Connection;
+  UnitInterfaces.Connection,
+  UnitSwaggerConfigProfessor;
 
 procedure RegisterProfessorRoutes(AHorse: THorse; ADBConnection: IDBConnection);
 
@@ -40,7 +41,7 @@ begin
       Professor.Free;
     end;
 
-    Res.Send(JSONArray);
+    Res.Send(JSONArray).Status(200);
   finally
     DAO.Free;
   end;
@@ -145,11 +146,7 @@ end;
 
 procedure ConfigurarSwaggerProfessor;
 begin
-  Swagger.BasePath('/v1').Path('/professores').Tag('Professor')
-  .GET('Listar todos', 'Lista completa de professores').AddResponse(200, 'Sucesso na requisição professores').Schema(TProfessor).IsArray(True).&End.&End
-  .POST('Adiciona professor', 'Adicionar novo professor').AddParamBody('professor data', 'professor data').Required(True).Schema(TProfessor).&End.AddResponse(201, 'Professor criado com sucesso').&End.&End
-  .PUT('Atualizar professor', 'Atualiza um professor pelo código').AddParamBody('professor data', 'professor data').Required(True).Schema(TProfessor).&End.AddResponse(201, 'Professor atualizado com sucesso').&End.&End
-  .DELETE('Deleta professor', 'Delete um professor pelo código').AddParamBody('professor data', 'professor data').Required(True).Schema(TProfessor).&End.AddResponse(201, 'Professor deletado com sucesso').&End.&End;
+  TSwaggerProfesso.ConfigurarSwaggerProfessor;
 end;
 
 end.

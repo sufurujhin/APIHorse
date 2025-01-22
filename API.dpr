@@ -9,9 +9,10 @@ uses
   UnitTableList in 'Connection\UnitTableList.pas',
   UnitSQLiteDLLExtract in 'FuncoesUteis\UnitSQLiteDLLExtract.pas',
   UnitSwaggerConfigProfessor in 'HorseConfig\UnitSwaggerConfigProfessor.pas',
-  UnitProfessorModel in 'Model\UnitProfessorModel.pas',
+  UnitProfessorModel in 'Model\UnitProfessorModel.pas' {$R *.res},
   UnitProfessorRoutes in 'Routes\UnitProfessorRoutes.pas',
-  UnitInterfaces.Connection in 'Connection\UnitInterfaces.Connection.pas';
+  UnitInterfaces.Connection in 'Connection\UnitInterfaces.Connection.pas',
+  UnitProfessorDAO in 'DAO\UnitProfessorDAO.pas';
 
 {$R *.res}
 
