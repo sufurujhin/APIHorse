@@ -3,10 +3,21 @@ unit FormMainAPI;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Controller.API,
-  FireDAC.UI.Intf, FireDAC.VCLUI.Wait, FireDAC.Stan.Intf, FireDAC.Comp.UI;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  Controller.API,
+  FireDAC.UI.Intf,
+  FireDAC.VCLUI.Wait,
+  FireDAC.Stan.Intf,
+  FireDAC.Comp.UI;
 
 type
   TStatus = (Offiline, Online);
@@ -32,6 +43,7 @@ type
     FAPI: TControllerAPI;
     procedure AtivarAPI(Sender: TObject);
     procedure DesativarAPI(Sender: TObject);
+    procedure Navegar;
   public
     { Public declarations }
   end;
@@ -72,6 +84,19 @@ begin
   TPanel(Sender).Caption := CAPTION_DESATIVAR;
   FAPI.DesativarAPI;
   Application.ProcessMessages;
+end;
+
+procedure TFormMain.Navegar;
+var
+  URLSwagger: WideString;
+begin
+  if FAPI.Port = 0 then
+  begin
+    AtivarAPI(PanelButtonAtivar);
+    Sleep(100);
+  end;
+  URLSwagger := '--start-fullscreen http://localhost:' + IntToStr(FAPI.Port) + '/swagger/doc/html';
+  ShellExecute(0, 'OPEN', 'chrome.exe', PWideChar(URLSwagger), nil, SW_SHOWNORMAL);
 end;
 
 procedure TFormMain.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -125,16 +150,8 @@ begin
 end;
 
 procedure TFormMain.PanelNavegadorClick(Sender: TObject);
-var
-  URLSwagger: WideString;
 begin
-  if FAPI.Port = 0 then
-  begin
-    AtivarAPI(PanelButtonAtivar);
-    Sleep(100);
-  end;
-  URLSwagger := '--start-fullscreen http://localhost:' + IntToStr(FAPI.Port) + '/swagger/doc/html';
-  ShellExecute(0, 'OPEN', 'chrome.exe', PWideChar(URLSwagger), nil, SW_SHOWNORMAL);
+  Navegar;
 end;
 
 procedure TFormMain.PanelNavegadorMouseEnter(Sender: TObject);

@@ -3,7 +3,7 @@ unit UnitDBConnectionFactory;
 interface
 
 uses
-  UnitDBConnectionIntf;
+  UnitInterfaces.Connection;
 
 type
   TDBConnectionFactory = class

@@ -13,7 +13,7 @@ implementation
 
 procedure ConfigurarSwaggerProfessor;
 begin
-  Swagger.BasePath('v1')
+  {Swagger.BasePath('v1')
       .Path('professor')
         .Tag('Professor')
         .GET('List All', 'Lista completa de professores')
@@ -29,7 +29,7 @@ begin
           .&End
         .&End
       .&End
-    .&End;
+    .&End;     }
 end;
 
 end.

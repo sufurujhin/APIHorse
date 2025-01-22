@@ -5,11 +5,13 @@ uses
   FormMainAPI in 'FormMainAPI.pas' {FormMain},
   Controller.API in 'Controls\Controller.API.pas',
   UnitDBConnectionFactory in 'Connection\UnitDBConnectionFactory.pas',
-  UnitDBConnectionIntf in 'Connection\UnitDBConnectionIntf.pas',
   UnitSQLiteConnection in 'Connection\UnitSQLiteConnection.pas',
   UnitTableList in 'Connection\UnitTableList.pas',
   UnitSQLiteDLLExtract in 'FuncoesUteis\UnitSQLiteDLLExtract.pas',
-  UnitSwaggerConfig in 'HorseConfig\UnitSwaggerConfig.pas';
+  UnitSwaggerConfigProfessor in 'HorseConfig\UnitSwaggerConfigProfessor.pas',
+  UnitProfessorModel in 'Model\UnitProfessorModel.pas',
+  UnitProfessorRoutes in 'Routes\UnitProfessorRoutes.pas',
+  UnitInterfaces.Connection in 'Connection\UnitInterfaces.Connection.pas';
 
 {$R *.res}
 

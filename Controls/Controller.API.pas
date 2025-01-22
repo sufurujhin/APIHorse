@@ -2,16 +2,18 @@ unit Controller.API;
 
 interface
 
-uses Horse, UnitDBConnectionIntf, FireDAC.Comp.Client, UnitDBConnectionFactory,
+uses Horse,
+  UnitInterface.ConnectionDB,
+  UnitDBConnectionFactory,
   System.SysUtils,
   FireDAC.Phys.SQLite,
-  FireDAC.Phys.SQLiteDef;
+  FireDAC.Phys.SQLiteDef,
+  UnitProfessorRoutes;
 
 type
   TControllerAPI = Class
   private
     FPort: Integer;
-    FConnection: TFDConnection;
     FSQLiteDriverLink: TFDPhysSQLiteDriverLink;
     function GetConnection: IDBConnection;
 
@@ -36,15 +38,17 @@ uses
 procedure TControllerAPI.AtivarAPI;
 begin
   FPort :=  8080;
+  App :=  THorse.Create;
   try
     if not THorse.IsRunning then
     begin
       THorse.Use(HorseSwagger); // Access http://localhost:9000/swagger/doc/html
       THorse.MaxConnections := 9999999;
       THorse.Port := Port;
+      StartConnection;
+      RegisterProfessorRoutes(App, GetConnection);
       ConfigurarSwaggerProfessor;
       THorse.Listen(Port);
-      StartConnection;
     end;
   except
 
@@ -77,8 +81,7 @@ begin
     if not Assigned(FSQLiteDriverLink) then
       FSQLiteDriverLink := TFDPhysSQLiteDriverLink.Create(nil);
     FSQLiteDriverLink.VendorLib := ExtractFilePath(ParamStr(0)) + 'sqlite3.dll';
-    FConnection := GetConnection.GetConnection;
-    FConnection.ExecSQL(TTableList.CreateTable);
+    GetConnection.GetConnection.ExecSQL(TTableList.CreateTable);
   except
     on E: Exception do
       raise Exception.Create('Erro: ' + E.Message);

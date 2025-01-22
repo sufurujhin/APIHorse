@@ -84,7 +84,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
-        <DCC_UnitSearchPath>.\Frameworks\Horse\gbswagger-master\Source\Core;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>.\Frameworks\Horse\gbswagger-master\Source\Core;.\Frameworks\Horse\gbswagger-master\Source\Datasnap;.\Frameworks\Horse\gbswagger-master\Source\Horse;.\Frameworks\Horse\gbswagger-master\Source\Resources;.\Frameworks\Horse\gbswagger-master\Source\Validator;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
@@ -107,11 +107,15 @@
         </DCCReference>
         <DCCReference Include="Controls\Controller.API.pas"/>
         <DCCReference Include="Connection\UnitDBConnectionFactory.pas"/>
-        <DCCReference Include="Connection\UnitDBConnectionIntf.pas"/>
         <DCCReference Include="Connection\UnitSQLiteConnection.pas"/>
         <DCCReference Include="Connection\UnitTableList.pas"/>
         <DCCReference Include="FuncoesUteis\UnitSQLiteDLLExtract.pas"/>
-        <DCCReference Include="HorseConfig\UnitSwaggerConfig.pas"/>
+        <DCCReference Include="HorseConfig\UnitSwaggerConfigProfessor.pas"/>
+        <DCCReference Include="Model\UnitProfessorModel.pas">
+            <Form>$R *.res</Form>
+        </DCCReference>
+        <DCCReference Include="Routes\UnitProfessorRoutes.pas"/>
+        <DCCReference Include="Connection\UnitInterfaces.Connection.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -3,7 +3,7 @@ unit UnitSQLiteConnection;
 interface
 
 uses
-  UnitDBConnectionIntf,
+  UnitInterfaces.Connection,
   FireDAC.Comp.Client,
   FireDAC.Stan.Def,
   FireDAC.Stan.Async,
