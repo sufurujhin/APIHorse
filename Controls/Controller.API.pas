@@ -3,6 +3,8 @@ unit Controller.API;
 interface
 
 uses Horse,
+  Horse.Jhonson,
+  Horse.HandleException,
   UnitInterfaces.Connection,
   UnitDBConnectionFactory,
   System.SysUtils,
@@ -41,7 +43,9 @@ begin
   try
     if not THorse.IsRunning then
     begin
-      THorse.Use(HorseSwagger); // Access http://localhost:8080/swagger/doc/html
+      THorse.Use(HorseSwagger)
+      .Use(Jhonson)
+      .Use(HandleException);; // Access http://localhost:8080/swagger/doc/html
       THorse.MaxConnections := 9999999;
       THorse.Port := Port;
       StartConnection;

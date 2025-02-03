@@ -3,7 +3,9 @@ unit UnitProfessorRoutes;
 interface
 
 uses
-  Horse, Horse.GBSwagger,
+  Horse,
+  Horse.GBSwagger,
+  Horse.JWT,
   UnitProfessorDAO,
   UnitProfessorModel,
   UnitSQLiteConnection,
@@ -18,7 +20,8 @@ procedure ConfigurarSwaggerProfessor;
 
 implementation
 
-procedure GetAllProfessores(Req: THorseRequest; Res: THorseResponse; Next: TProc; ADBConnection: IDBConnection);
+procedure GetAllProfessores(Req: THorseRequest; Res: THorseResponse;
+  Next: TProc; ADBConnection: IDBConnection);
 var
   DAO: TProfessorDAO;
   Professores: TArray<TProfessor>;
@@ -28,22 +31,24 @@ begin
   DAO := TProfessorDAO.Create(ADBConnection);
   JSONArray := TJSONArray.Create;
   try
-    Professores := DAO.GetAll;
+    try
+      Professores := DAO.GetAll;
 
-    for Professor in Professores do
-    begin
-      JSONArray.AddElement(
-        TJSONObject.Create
-          .AddPair('id', TJSONNumber.Create(Professor.Id))
-          .AddPair('nome', Professor.Nome)
-          .AddPair('idade', TJSONNumber.Create(Professor.Idade))
-      );
-      Professor.Free;
+      for Professor in Professores do
+      begin
+        JSONArray.AddElement(TJSONObject.Create.AddPair('id',
+          TJSONNumber.Create(Professor.Id)).AddPair('nome', Professor.Nome)
+          .AddPair('idade', TJSONNumber.Create(Professor.Idade)));
+        Professor.Free;
+      end;
+
+      Res.Send(JSONArray).Status(200);
+    finally
+      DAO.Free;
     end;
-
-    Res.Send(JSONArray).Status(200);
-  finally
-    DAO.Free;
+  except
+    on E: Exception do
+      raise EHorseException.New.Error('Erro:' + E.Message);
   end;
 end;
 
@@ -54,7 +59,13 @@ begin
   AHorse.GET(BasePath,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin
-      GetAllProfessores(Req, Res, Next, ADBConnection);
+      try
+        GetAllProfessores(Req, Res, Next, ADBConnection);
+
+      except
+        on E: Exception do
+          raise EHorseException.New.Error('Erro:' + E.Message);
+      end;
     end);
 
   AHorse.POST(BasePath,
@@ -64,22 +75,29 @@ begin
       ProfessorDAO: TProfessorDAO;
       JSONBody: TJSONObject;
     begin
-      NewProfessor := TProfessor.Create;
-      JSONBody := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
       try
-        NewProfessor.Nome := JSONBody.GetValue('Nome').Value;
-        NewProfessor.Idade := StrToIntDef(JSONBody.GetValue('Idade').Value, 0);
-
-        ProfessorDAO := TProfessorDAO.Create(ADBConnection);
+        NewProfessor := TProfessor.Create;
+        JSONBody := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
         try
-          ProfessorDAO.Insert(NewProfessor);
-          Res.Send<TJSONObject>(TJSONObject.Create.AddPair('message', 'Professor criado com sucesso.'));
+          NewProfessor.Nome := JSONBody.GetValue('Nome').Value;
+          NewProfessor.Idade := StrToIntDef(JSONBody.GetValue('Idade')
+            .Value, 0);
+
+          ProfessorDAO := TProfessorDAO.Create(ADBConnection);
+          try
+            ProfessorDAO.Insert(NewProfessor);
+            Res.Send<TJSONObject>(TJSONObject.Create.AddPair('message',
+              'Professor criado com sucesso.'));
+          finally
+            ProfessorDAO.Free;
+          end;
         finally
-          ProfessorDAO.Free;
+          NewProfessor.Free;
+          JSONBody.Free;
         end;
-      finally
-        NewProfessor.Free;
-        JSONBody.Free;
+      except
+        on E: Exception do
+          raise EHorseException.New.Error('Erro:' + E.Message);
       end;
     end);
 
@@ -91,53 +109,64 @@ begin
       ProfessorDAO: TProfessorDAO;
       JSONBody: TJSONObject;
     begin
-      UpdatedProfessor := TProfessor.Create;
-      JSONBody := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
       try
-        UpdatedProfessor.Id := StrToIntDef(JSONBody.GetValue('Id').Value, 0);
-        UpdatedProfessor.Nome := JSONBody.GetValue('Nome').Value;
-        UpdatedProfessor.Idade := StrToIntDef(JSONBody.GetValue('Idade').Value, 0);
-
-        ProfessorDAO := TProfessorDAO.Create(ADBConnection);
+        UpdatedProfessor := TProfessor.Create;
+        JSONBody := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
         try
-          if ProfessorDAO.Update(UpdatedProfessor) then
-            Res.Send<TJSONObject>(TJSONObject.Create.AddPair('message',
-              'Professor atualizado com sucesso.'))
-          else
-            Res.Status(404).Send<TJSONObject>(TJSONObject.Create.AddPair
-              ('error', 'Professor não encontrado.'));
+          UpdatedProfessor.Id := StrToIntDef(JSONBody.GetValue('Id').Value, 0);
+          UpdatedProfessor.Nome := JSONBody.GetValue('Nome').Value;
+          UpdatedProfessor.Idade := StrToIntDef(JSONBody.GetValue('Idade')
+            .Value, 0);
+
+          ProfessorDAO := TProfessorDAO.Create(ADBConnection);
+          try
+            if ProfessorDAO.Update(UpdatedProfessor) then
+              Res.Send<TJSONObject>(TJSONObject.Create.AddPair('message',
+                'Professor atualizado com sucesso.'))
+            else
+              Res.Status(404).Send<TJSONObject>(TJSONObject.Create.AddPair
+                ('error', 'Professor não encontrado.'));
+          finally
+            ProfessorDAO.Free;
+          end;
         finally
-          ProfessorDAO.Free;
+          UpdatedProfessor.Free;
+          JSONBody.Free;
         end;
-      finally
-        UpdatedProfessor.Free;
-        JSONBody.Free;
+      except
+        on E: Exception do
+          raise EHorseException.New.Error('Erro:' + E.Message);
       end;
     end);
 
 
   // Delete
-  AHorse.Delete(BasePath,
+  AHorse.AddCallback(HorseJWT('MY-PASSWORD')).Delete(BasePath,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     var
       ProfessorId: Integer;
       ProfessorDAO: TProfessorDAO;
       JSONBody: TJSONObject;
     begin
-      JSONBody := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
-
-      ProfessorId := StrToIntDef(JSONBody.GetValue('Id').Value, 0);
-      ProfessorDAO := TProfessorDAO.Create(ADBConnection);
       try
-        if ProfessorDAO.Delete(ProfessorId) then
-          Res.Send<TJSONObject>(TJSONObject.Create.AddPair('message',
-            'Professor excluído com sucesso.'))
-        else
-          Res.Status(404).Send<TJSONObject>(TJSONObject.Create.AddPair('error',
-            'Professor não encontrado.'));
-      finally
-        ProfessorDAO.Free;
-        JSONBody.Free;
+        JSONBody := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
+
+        ProfessorId := StrToIntDef(JSONBody.GetValue('Id').Value, 0);
+        ProfessorDAO := TProfessorDAO.Create(ADBConnection);
+        try
+          if ProfessorDAO.Delete(ProfessorId) then
+            Res.Send<TJSONObject>(TJSONObject.Create.AddPair('message',
+              'Professor excluído com sucesso.'))
+          else
+            Res.Status(404).Send<TJSONObject>(TJSONObject.Create.AddPair
+              ('error', 'Professor não encontrado.'));
+        finally
+          ProfessorDAO.Free;
+          JSONBody.Free;
+        end;
+      except
+        on E: Exception do
+          raise EHorseException.New.Error('Erro:' + E.Message);
       end;
     end);
 
