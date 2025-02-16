@@ -42,7 +42,7 @@ begin
         Professor.Free;
       end;
 
-      Res.Send(JSONArray).Status(200);
+      Res.Send(JSONArray.ToString).Status(200);
     finally
       DAO.Free;
     end;
@@ -55,7 +55,6 @@ end;
 procedure RegisterProfessorRoutes(AHorse: THorse; ADBConnection: IDBConnection);
 const BasePath = '/v1/professores';
 begin
-
   AHorse.GET(BasePath,
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
     begin

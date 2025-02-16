@@ -12,7 +12,8 @@ uses
   UnitProfessorModel in 'Model\UnitProfessorModel.pas' {$R *.res},
   UnitProfessorRoutes in 'Routes\UnitProfessorRoutes.pas',
   UnitInterfaces.Connection in 'Connection\UnitInterfaces.Connection.pas',
-  UnitProfessorDAO in 'DAO\UnitProfessorDAO.pas';
+  UnitProfessorDAO in 'DAO\UnitProfessorDAO.pas',
+  UnitArquivoRoutes in 'Routes\UnitArquivoRoutes.pas';
 
 {$R *.res}
 

@@ -10,7 +10,9 @@ uses Horse,
   System.SysUtils,
   FireDAC.Phys.SQLite,
   FireDAC.Phys.SQLiteDef,
-  UnitProfessorRoutes;
+  UnitProfessorRoutes,
+  UnitArquivoRoutes,
+  Horse.Compression;
 
 type
   TControllerAPI = Class
@@ -45,11 +47,13 @@ begin
     begin
       THorse.Use(HorseSwagger)
       .Use(Jhonson)
+      .Use(Compression())
       .Use(HandleException);; // Access http://localhost:8080/swagger/doc/html
       THorse.MaxConnections := 9999999;
       THorse.Port := Port;
       StartConnection;
       RegisterProfessorRoutes(App, GetConnection);
+      RegisterArquivo(App);
       THorse.Listen(Port);
     end;
   except
